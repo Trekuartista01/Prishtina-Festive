@@ -490,7 +490,7 @@ export default function ContactForm() {
                     ) : (
                         <button
                             type="submit"
-                            className="w-full bg-[#848F38] font-malkie-slab text-[34px] leading-[1.7] text-align-center uppercase text-white  rounded-md hover:bg-[#c43b32] text-sm transition-colors"
+                            className="flex w-full items-center justify-center bg-[#848F38] py-4 font-malkie-slab text-[34px] uppercase leading-[1.1] text-white rounded-md transition-colors hover:bg-[#c43b32]"
                         >
                             Dërgo
                         </button>
