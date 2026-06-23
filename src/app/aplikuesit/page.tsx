@@ -2,16 +2,12 @@
 
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { mockApplicants, spaces } from './data/data';
+import { mockApplicants } from './data/data';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { WINNER_SPACES, spaceMapping } from '@/lib/winners-list';
 
-// Map space names for PDF display
-const spaceMapping: { [key: string]: string } = {
-  'Sheshi Skënderbeu': 'Skenderbeu',
-  'Sheshi Zahir Pajaziti': 'Zahir Pajaziti',
-  'Wonderland (me mjete motorike)': 'Wonderland Adem Jashari'
-};
+const spaces = [...WINNER_SPACES];
 
 export default function AplikuesitPage() {
   const [selectedFilter, setSelectedFilter] = useState<string>('');
@@ -52,11 +48,12 @@ export default function AplikuesitPage() {
   }, [selectedFilter, searchByName, searchByCompany]);
 
   const spaceCounts = useMemo(() => {
-    return {
-      'Sheshi Skënderbeu': mockApplicants.filter(a => a.selectedSpace === 'Sheshi Skënderbeu').length,
-      'Sheshi Zahir Pajaziti': mockApplicants.filter(a => a.selectedSpace === 'Sheshi Zahir Pajaziti').length,
-      'Wonderland (me mjete motorike)': mockApplicants.filter(a => a.selectedSpace === 'Wonderland (me mjete motorike)').length,
-    };
+    return Object.fromEntries(
+      spaces.map((space) => [
+        space,
+        mockApplicants.filter((a) => a.selectedSpace === space).length,
+      ])
+    ) as Record<string, number>;
   }, []);
 
   const filteredApplicants = useMemo(() => {
@@ -392,18 +389,20 @@ export default function AplikuesitPage() {
         <div className="mb-4 sm:mb-6">
           <div className="flex items-center gap-4 mb-3">
             <Image 
-              src="/assets/logo-2025.png" 
-              alt="Logo" 
-              width={80}
-              height={80}
-              className="w-16 h-16 sm:w-20 sm:h-20 object-contain"
+              src="/assets/summer/banner-top.png" 
+              alt="Akull n'Verë" 
+              width={100}
+              height={100}
+              className="w-20 h-20 object-contain"
             />
-            <h1 className="text-2xl sm:text-3xl font-bold text-[#031603] font-aerialpro">Lista e Aplikuesve për Shtëpizë në Verë n&apos;Dimën</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-[#031603] font-aerialpro">Lista e Aplikuesve për Shtëpizë në Akull n&apos;Verë</h1>
           </div>
           <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 text-xs sm:text-sm text-gray-600 font-aerialpro">
-            <span className="font-aerialpro">Sheshi Skënderbeu: <strong className="text-[#EF5B13] font-aerialpro">{spaceCounts['Sheshi Skënderbeu']}</strong></span>
-            <span className="font-aerialpro">Sheshi Zahir Pajaziti: <strong className="text-[#367a3b] font-aerialpro">{spaceCounts['Sheshi Zahir Pajaziti']}</strong></span>
-            <span className="font-aerialpro">Wonderland: <strong className="text-blue-600 font-aerialpro">{spaceCounts['Wonderland (me mjete motorike)']}</strong></span>
+            {spaces.map((space) => (
+              <span key={space} className="font-aerialpro">
+                {spaceMapping[space] || space}: <strong className="text-[#EF5B13] font-aerialpro">{spaceCounts[space]}</strong>
+              </span>
+            ))}
           </div>
         </div>
 
@@ -426,7 +425,7 @@ export default function AplikuesitPage() {
             />
           </div>
           
-          <div className="grid grid-cols-2 gap-2 w-full">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 w-full">
             <button
               onClick={() => setSelectedFilter('')}
               className={`w-full px-3 py-1 rounded text-sm font-aerialpro ${
@@ -443,7 +442,7 @@ export default function AplikuesitPage() {
                   selectedFilter === space ? 'bg-[#EF5B13] text-white' : 'bg-gray-200 hover:bg-gray-300'
                 }`}
               >
-                {space === 'Wonderland (me mjete motorike)' ? 'Wonderland' : space}
+                {spaceMapping[space] || space}
               </button>
             ))}
           </div>
@@ -501,7 +500,7 @@ export default function AplikuesitPage() {
           <div className="flex flex-wrap gap-2">
             {spaces.map((space) => {
               const count = selectedCountBySpace[space] || 0;
-              const displaySpace = spaceMapping[space] || (space === 'Wonderland (me mjete motorike)' ? 'Wonderland' : space);
+              const displaySpace = spaceMapping[space] || space;
               const isActive = activeSpaceForSelection === space;
               const hasSelections = count > 0;
               
@@ -570,7 +569,7 @@ export default function AplikuesitPage() {
                       {applicant.companyName}
                     </p>
                     <p className="text-sm text-[#367a3b] font-aerialpro mb-1">
-                      {applicant.selectedSpace === 'Wonderland (me mjete motorike)' ? 'Wonderland' : applicant.selectedSpace}
+                      {spaceMapping[applicant.selectedSpace] || applicant.selectedSpace}
                     </p>
                     <p className="text-xs text-gray-500 font-aerialpro">
                       {applicant.companyEmail}
@@ -597,7 +596,7 @@ export default function AplikuesitPage() {
           <div className="flex flex-col gap-2">
             {spaces.map((space) => {
               const count = selectedCountBySpace[space] || 0;
-              const displaySpace = spaceMapping[space] || (space === 'Wonderland (me mjete motorike)' ? 'Wonderland' : space);
+              const displaySpace = spaceMapping[space] || space;
               const isActive = activeSpaceForSelection === space;
               
               return (
@@ -687,7 +686,7 @@ export default function AplikuesitPage() {
                       <td className="px-2 sm:px-4 py-2 text-xs sm:text-sm text-[#031603] font-aerialpro hidden lg:table-cell">{applicant.phoneNumber}</td>
                       <td className="px-2 sm:px-4 py-2 text-xs sm:text-sm text-[#031603] font-aerialpro hidden lg:table-cell break-all">{applicant.companyEmail}</td>
                       <td className="px-2 sm:px-4 py-2 text-xs sm:text-sm text-[#367a3b] font-aerialpro">
-                        {applicant.selectedSpace === 'Wonderland (me mjete motorike)' ? 'Wonderland' : applicant.selectedSpace}
+                        {spaceMapping[applicant.selectedSpace] || applicant.selectedSpace}
                       </td>
                       <td className="px-2 sm:px-4 py-2 text-center">
                         <div className="flex justify-center gap-1 sm:gap-2 flex-wrap">

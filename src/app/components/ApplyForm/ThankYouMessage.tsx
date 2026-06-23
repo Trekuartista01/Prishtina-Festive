@@ -84,7 +84,7 @@ export default function ThankYouMessage() {
                     ref={subtitleRef}
                     className="text-lg sm:text-xl font-semibold text-[#031603] leading-relaxed"
                 >
-                    për aplikim për shtëpizë në <span className="font-bold text-[#367a3b] underline underline-offset-2">Verë n&apos;Dimën</span>
+                    për aplikim për shtëpizë në <span className="font-bold text-[#367a3b] underline underline-offset-2">Akull n&apos;Verë</span>
                 </p>
 
                 {/* Message */}

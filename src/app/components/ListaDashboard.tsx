@@ -99,11 +99,14 @@ export default function ListaDashboard({ onLogout }: ListaDashboardProps) {
   const getDownloadUrl = (applicantId: string, docType: 'business' | 'personal') =>
     `/api/download?id=${applicantId}&type=${docType}`;
 
-  const spaceCounts = useMemo(() => ({
-    'Sheshi Skënderbeu': applicants.filter((a) => a.selectedSpace === 'Sheshi Skënderbeu').length,
-    'Sheshi Zahir Pajaziti': applicants.filter((a) => a.selectedSpace === 'Sheshi Zahir Pajaziti').length,
-    'Wonderland (me mjete motorike)': applicants.filter((a) => a.selectedSpace === 'Wonderland (me mjete motorike)').length,
-  }), [applicants]);
+  const spaceCounts = useMemo(() => {
+    return Object.fromEntries(
+      spaces.map((space) => [
+        space,
+        applicants.filter((a) => a.selectedSpace === space).length,
+      ])
+    ) as Record<string, number>;
+  }, [applicants]);
 
   const filteredApplicants = useMemo(() => {
     let filtered = [...applicants];
@@ -222,15 +225,17 @@ export default function ListaDashboard({ onLogout }: ListaDashboardProps) {
       <div className="mb-6 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div>
           <div className="flex items-center gap-4 mb-3">
-            <Image src="/assets/logo-2025.png" alt="Logo" width={80} height={80} className="w-16 h-16 sm:w-20 sm:h-20 object-contain" />
+            <Image src="/assets/summer/banner-top.png" alt="Logo" width={100} height={100} className="w-20 h-20 object-contain" />
             <h1 className="text-2xl sm:text-3xl font-bold text-[#031603] font-aerialpro">
-              Lista e Aplikuesve për Shtëpizë në Verë n&apos;Dimën
+              Lista e Aplikuesve për Shtëpizë në Akull n&apos;Verë
             </h1>
           </div>
           <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 text-xs sm:text-sm text-gray-600 font-aerialpro">
-            <span>Sheshi Skënderbeu: <strong className="text-[#EF5B13]">{spaceCounts['Sheshi Skënderbeu']}</strong></span>
-            <span>Sheshi Zahir Pajaziti: <strong className="text-[#367a3b]">{spaceCounts['Sheshi Zahir Pajaziti']}</strong></span>
-            <span>Wonderland: <strong className="text-blue-600">{spaceCounts['Wonderland (me mjete motorike)']}</strong></span>
+            {spaces.map((space) => (
+              <span key={space}>
+                {spaceMapping[space] || space}: <strong className="text-[#EF5B13]">{spaceCounts[space]}</strong>
+              </span>
+            ))}
           </div>
         </div>
         <button
@@ -352,11 +357,11 @@ export default function ListaDashboard({ onLogout }: ListaDashboardProps) {
           <input type="text" value={searchByName} onChange={(e) => setSearchByName(e.target.value)} placeholder="Kërko sipas emrit..." className="flex-1 px-4 py-2 text-sm font-medium text-[#031603] border border-[#031603] rounded focus:outline-none focus:border-[#EF5B13]" />
           <input type="text" value={searchByCompany} onChange={(e) => setSearchByCompany(e.target.value)} placeholder="Kërko sipas kompanisë..." className="flex-1 px-4 py-2 text-sm font-medium text-[#031603] border border-[#031603] rounded focus:outline-none focus:border-[#EF5B13]" />
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
           <button onClick={() => setSelectedFilter('')} className={`px-3 py-1.5 rounded-lg text-sm font-bold transition ${selectedFilter === '' ? 'bg-[#EF5B13]/15 text-black border-2 border-[#031603]' : 'text-[#031603] border border-[#031603] hover:text-black hover:bg-black/5'}`}>Të gjitha</button>
           {spaces.map((space) => (
             <button key={space} onClick={() => setSelectedFilter(space)} className={`px-3 py-1.5 rounded-lg text-sm font-bold transition ${selectedFilter === space ? 'bg-[#EF5B13]/15 text-black border-2 border-[#031603]' : 'text-[#031603] border border-[#031603] hover:text-black hover:bg-black/5'}`}>
-              {space === 'Wonderland (me mjete motorike)' ? 'Wonderland' : space}
+              {spaceMapping[space] || space}
             </button>
           ))}
         </div>

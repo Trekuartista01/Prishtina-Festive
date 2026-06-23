@@ -1,7 +1,6 @@
 export const spaces = [
   'Sheshi Skënderbeu',
   'Sheshi Zahir Pajaziti',
-  'Wonderland (me mjete motorike)'
 ];
 
 export const mockApplicants = [

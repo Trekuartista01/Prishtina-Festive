@@ -31,6 +31,10 @@ const aeonikProBold = localFont({
 export const metadata: Metadata = {
   title: "PRISHTINA FESTIVE",
   description: "Prishtina Festive",
+  icons: {
+    icon: "/assets/summer/banner-top.png",
+    apple: "/assets/summer/banner-top.png",
+  },
 };
 
 export default function RootLayout({

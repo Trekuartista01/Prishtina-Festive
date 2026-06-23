@@ -94,7 +94,7 @@ export const AppCriteria = () => {
           ref={titleRef}
           className="text-xl lg:text-xl font-bold text-[#031603] text-center"
         >
-          Aplikimet për shtëpizat për tregun e fundvitit <b className='uppercase'>&quot;Verë n&rsquo;Dimën&quot;</b> janë mbyllur.
+          Aplikimet për shtëpizat për tregun e fundvitit <b className='uppercase'>&quot;Akull n&rsquo;Verë&quot;</b> janë mbyllur.
         </h1>
 
         {/* Thank You */}

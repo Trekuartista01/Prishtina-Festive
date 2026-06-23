@@ -1,19 +1,61 @@
 "use client";
 
-import { useState, ChangeEvent, FormEvent, useEffect, useRef } from 'react';
+import { useState, ChangeEvent, FormEvent } from 'react';
 import Image from 'next/image';
-import { gsap } from 'gsap';
-import { HiOutlineChevronDoubleDown } from 'react-icons/hi';
-import pattern from "../../../../public/assets/pattern.png";
-import image1 from "../../../../public/assets/zahiri.png";
-import image2 from "../../../../public/assets/skenderbeu.png";
-import image3 from "../../../../public/assets/wonderland.png";
+import bannerTop from "../../../../public/assets/summer/banner-top.png";
+import bannerBottom from "../../../../public/assets/summer/banner-bottom.png";
+import logo from "../../../../public/assets/summer/logo.png";
+import image1 from "../../../../public/assets/summer/shesh-zahir.png";
+import image2 from "../../../../public/assets/summer/shesh-skenderbeu.png";
 import LoadingSpinner from '../LoadingSpinner';
 
+const BANNER_MAX_WIDTH = 800;
+
+const contentWidthStyle = { width: `min(calc(100vw - 3rem), ${BANNER_MAX_WIDTH}px)` };
+const fullWidthImageClass =
+    'w-[calc((100vw-16px)*0.97)] sm:w-[calc((100vw-100px)*0.85)]';
+// 800 * 0.8 * 0.85 * 0.85 = 462px desktop max width
+const bannerTopImageClass =
+    'w-[min(calc(100vw-1rem),92vw)] sm:w-[min(calc(100vw-3rem),462px)]';
+
+function DecorativeBanner({
+    src,
+    alt,
+    priority = false,
+    maxWidth = BANNER_MAX_WIDTH,
+    fullWidth = false,
+    imageClassName = '',
+}: {
+    src: typeof bannerTop;
+    alt: string;
+    priority?: boolean;
+    maxWidth?: number;
+    fullWidth?: boolean;
+    imageClassName?: string;
+}) {
+    const responsiveWidthClass = imageClassName || (fullWidth ? fullWidthImageClass : '');
+
+    return (
+        <div className={`flex w-full justify-center ${fullWidth ? 'relative left-1/2 -translate-x-1/2' : ''}`}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+                src={src.src}
+                alt={alt}
+                width={src.width}
+                height={src.height}
+                loading={priority ? 'eager' : 'lazy'}
+                className={`block h-auto max-w-full ${responsiveWidthClass}`}
+                style={
+                    responsiveWidthClass
+                        ? undefined
+                        : { width: `min(calc(100vw - 3rem), ${maxWidth}px)` }
+                }
+            />
+        </div>
+    );
+}
+
 export default function ContactForm() {
-    const prishtinaRef = useRef<HTMLHeadingElement>(null);
-    const bashkeRef = useRef<HTMLHeadingElement>(null);
-    const arrowRef = useRef<HTMLDivElement>(null);
     const [fullName, setFullName] = useState('');
     const [companyName, setCompanyName] = useState('');
     const [companyEmail, setCompanyEmail] = useState('');
@@ -30,42 +72,6 @@ export default function ContactForm() {
     const [submittedSelectedSpace, setSubmittedSelectedSpace] = useState('');
     const [showSpaceErrorModal, setShowSpaceErrorModal] = useState(false);
     const [compressingFile, setCompressingFile] = useState<string | null>(null);
-
-    // GSAP animations for headings
-    useEffect(() => {
-        if (prishtinaRef.current && bashkeRef.current) {
-            const tl = gsap.timeline();
-            
-            // Animate "Prishtina Festive" - fade in and slide up
-            tl.from(prishtinaRef.current, {
-                opacity: 0,
-                y: 30,
-                duration: 0.8,
-                ease: "power3.out"
-            })
-            // Animate "Bashkë në shesh!" - fade in and slide up with slight delay
-            .from(bashkeRef.current, {
-                opacity: 0,
-                y: 30,
-                duration: 0.8,
-                ease: "power3.out",
-                scale: 0.9
-            }, "-=0.4");
-        }
-    }, []);
-
-    // GSAP bounce animation for arrow
-    useEffect(() => {
-        if (arrowRef.current) {
-            gsap.to(arrowRef.current, {
-                y: 10,
-                duration: 0.8,
-                ease: "power2.inOut",
-                repeat: -1,
-                yoyo: true
-            });
-        }
-    }, []);
 
     // Function to split full name into name and surname
     const splitFullName = (fullName: string) => {
@@ -232,56 +238,40 @@ export default function ContactForm() {
     };
 
     return (
-        <div className="flex justify-center mt-[-8px] p-8">
-            <form onSubmit={handleSubmit} className="w-full space-y-4">
-                {/* Logo centered at top */}
-                <div className="flex justify-center mb-6">
-                    <Image 
-                        src="/assets/logo-2025.png" 
-                        alt="Logo" 
-                        width={170}
-                        height={120}
-                        className="w-40 h-40 sm:w-32 sm:h-32 object-contain"
-                    />
+        <div className="w-full bg-white">
+            {/* Hero */}
+            <section className="flex flex-col items-center pt-[50px] pb-0 w-full">
+                <DecorativeBanner src={logo} alt="Colorful Edition 2026" priority fullWidth />
+
+                <div className="mt-[25px] mb-[25px] w-full max-w-5xl px-1 text-center font-malkie-slab text-[13px] leading-[1.2] tracking-tight uppercase text-black sm:px-4 sm:text-[clamp(18px,3.2vw,32px)] sm:leading-[1.15] sm:tracking-normal">
+                    <p>KËTU MUND TË GJENI DOKUMENTIN MBI DETAJET PËR APLIKIMIN</p>
+                    <p>PËR SHTËPIZË NË COLORFUL EDITION 2026</p>
                 </div>
 
-                {/* Header Text */}
-                <div className="text-center mb-6 space-y-2">
-                    <h1 ref={prishtinaRef} className="text-xl sm:text-2xl font-bold font-malkie-slab text-[#031603]">
-                        Prishtina Festive
-                    </h1>
-                    <h2 ref={bashkeRef} className="text-3xl sm:text-4xl text-[#367a3b] font-malkie-slab">
-                        Bashkë në shesh!
-                    </h2>
-                    <p className="text-sm sm:text-base text-gray-600 font-aerialpro mt-4">
-                        Këtu mund të gjeni dokumentin mbi detajet për aplikimin për shtëpizë në <b>Verë n&apos;Dimën</b>
-                    </p>
-                </div>
-
-                {/* PDF Document View/Download */}
-                <div className="flex flex-col items-center gap-3 mb-6">
-                    <a 
-                        href="/assets/Thirrje-per-aplikim.pdf" 
+                <div className="mt-4 flex flex-col items-center px-4 w-full">
+                    <a
+                        href="/assets/Thirrje-për-aplikim.pdf"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center px-6 py-3 bg-[#367a3b] text-white rounded hover:bg-[#2d5f32] font-aerialpro text-base transition shadow-md hover:shadow-lg"
+                        className="inline-flex items-center justify-center bg-[#FFB33E] px-12 py-3 font-malkie-slab text-[clamp(20px,3vw,32px)] uppercase leading-[1.1] text-black rounded-none transition-colors hover:bg-[#f0a030]"
                     >
                         Shiko dokumentin
                     </a>
-                    <div ref={arrowRef} className="flex justify-center">
-                        <HiOutlineChevronDoubleDown className="text-[#367a3b] text-2xl" />
+                    <div className="w-full mt-[50px]">
+                        <DecorativeBanner src={bannerTop} alt="Akull n'Verë decorative banner" priority imageClassName={bannerTopImageClass} />
                     </div>
                 </div>
+            </section>
 
-                <Image src={pattern} alt="Logo" className="lg:w-[100ch] w-full object-contain mx-auto" />
-                <div className='lg:w-[409px] mx-auto'>
-                    <p className="text-[32px] text-center font-extrabold font-malkie-slab text-[#1d1d1b]">Apliko këtu!</p>
-                    <p className="text-center">Plotëso të dhënat në hapësirat e mëposhtme për të aplikuar për shtëpizë në <b>&quot;Verë n&rsquo;Dimën&quot;.</b></p>
+            <div className="flex justify-center px-4 sm:px-8 pb-8">
+            <form onSubmit={handleSubmit} className="w-full max-w-3xl">
+                <div className='lg:w-[409px] mx-auto mt-[50px]'>
+                    <p className="text-[32px] text-center uppercase font-malkie-slab text-[#1d1d1b]">Apliko këtu!</p>
+                    <p className="text-center text-[16px] font-aeonik-pro text-[#1d1d1b] mt-2">Plotëso të dhënat në hapësirat e mëposhtme për të aplikuar për shtëpizë në <b>&quot;Akull n&rsquo;Verë&quot;.</b></p>
                 </div>
 
                 {/* SEKSIONI 1: INFORMATA PERSONALE */}
-                <div className="space-y-4">
-                    <h3 className="text-[#367a3b] font-bold text-lg text-center">INFORMATA PERSONALE</h3>
+                <div className="space-y-4 mt-4">
                     
                     <div className="w-full max-w-[700px] mx-auto space-y-4">
                         <input
@@ -290,7 +280,7 @@ export default function ContactForm() {
                             onChange={(e) => setFullName(e.target.value)}
                             placeholder="Shkruani emrin dhe mbiemrin"
                             required
-                            className="block w-full px-4 py-3 bg-[#031603] text-white border border-[#EF5B13]/30 rounded-md focus:outline-none focus:border-[#EF5B13] transition-all"
+                            className="block w-full px-4 py-3 bg-[#F6B817] text-black text-center placeholder:text-black border border-[#EF5B13]/30 rounded-md focus:outline-none focus:border-[#EF5B13] transition-all"
                         />
 
                         <input
@@ -299,7 +289,7 @@ export default function ContactForm() {
                             onChange={(e) => setCompanyName(e.target.value)}
                             placeholder="Emri i kompanisë"
                             required
-                            className="block w-full px-4 py-3 bg-[#031603] text-white border border-[#EF5B13]/30 rounded-md focus:outline-none focus:border-[#EF5B13] transition-all"
+                            className="block w-full px-4 py-3 bg-[#F6B817] text-black text-center placeholder:text-black border border-[#EF5B13]/30 rounded-md focus:outline-none focus:border-[#EF5B13] transition-all"
                         />
 
                         <div className="flex flex-col lg:flex-row gap-4">
@@ -309,7 +299,7 @@ export default function ContactForm() {
                                 onChange={(e) => setCompanyEmail(e.target.value)}
                                 placeholder="Email adresa"
                                 required
-                                className="flex-1 px-4 py-3 bg-[#031603] text-white border border-[#EF5B13]/30 rounded-md focus:outline-none focus:border-[#EF5B13] transition-all"
+                                className="flex-1 px-4 py-3 bg-[#F6B817] text-black text-center placeholder:text-black border border-[#EF5B13]/30 rounded-md focus:outline-none focus:border-[#EF5B13] transition-all"
                             />
 
                             <input
@@ -318,15 +308,15 @@ export default function ContactForm() {
                                 onChange={(e) => setPhoneNumber(e.target.value)}
                                 placeholder="Nr.kontaktues"
                                 required
-                                className="flex-1 px-4 py-3 bg-[#031603] text-white border border-[#EF5B13]/30 rounded-md focus:outline-none focus:border-[#EF5B13] transition-all"
+                                className="flex-1 px-4 py-3 bg-[#F6B817] text-black text-center placeholder:text-black border border-[#EF5B13]/30 rounded-md focus:outline-none focus:border-[#EF5B13] transition-all"
                             />
                         </div>
                     </div>
                 </div>
 
                 {/* SEKSIONI 2: DOKUMENTET PËR NGARKIM */}
-                <div className="space-y-4">
-                    <h3 className="text-[#367a3b] font-bold text-lg text-center">DOKUMENTET PËR NGARKIM</h3>
+                <div className="space-y-4 mt-4">
+                    <h3 className="text-[#1d1d1b] font-malkie-slab text-[28px] leading-[2.5] uppercase text-center">DOKUMENTET PËR NGARKIM</h3>
                     
                     <div className="w-full max-w-[700px] mx-auto space-y-4">
                         {/* File inputs in flex layout */}
@@ -339,7 +329,7 @@ export default function ContactForm() {
                                         onChange={handleBusinessCertificateChange}
                                         required
                                         accept=".pdf, .jpg, .jpeg, .png"
-                                        className="block w-full px-4 py-3 bg-[#031603] text-white border border-[#EF5B13]/30 rounded-md focus:outline-none focus:border-[#EF5B13] transition-all file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#367a3b] file:text-white hover:file:bg-[#c43b32] file:cursor-pointer cursor-pointer"
+                                        className="block w-full px-4 py-3 bg-[#F6B817] text-black border border-[#EF5B13]/30 rounded-md focus:outline-none focus:border-[#EF5B13] transition-all file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#D93627] file:text-[#F6B817] hover:file:bg-[#c43b32] file:cursor-pointer cursor-pointer"
                                     />
                                 </label>
                                 <p className="text-[#c43b32] text-xs italic text-center lg:text-left">
@@ -360,7 +350,7 @@ export default function ContactForm() {
                                         onChange={handlePersonalDocumentChange}
                                         required
                                         accept=".pdf, .jpg, .jpeg, .png"
-                                        className="block w-full px-4 py-3 bg-[#031603] text-white border border-[#EF5B13]/30 rounded-md focus:outline-none focus:border-[#EF5B13] transition-all file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#367a3b] file:text-white hover:file:bg-[#c43b32] file:cursor-pointer cursor-pointer"
+                                        className="block w-full px-4 py-3 bg-[#F6B817] text-black border border-[#EF5B13]/30 rounded-md focus:outline-none focus:border-[#EF5B13] transition-all file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#D93627] file:text-[#F6B817] hover:file:bg-[#c43b32] file:cursor-pointer cursor-pointer"
                                     />
                                 </label>
                                 <p className="text-[#c43b32] text-xs italic text-center lg:text-left">
@@ -386,164 +376,110 @@ export default function ContactForm() {
                 </div>
 
                 {/* SEKSIONI 3: ZGJIDHNI HAPËSIRËN */}
-                <div>
-                    <h3 className="text-[#367a3b] font-bold text-lg text-center mb-4">ZGJIDHNI HAPËSIRËN</h3>
+                <div className="mt-[50px] flex w-full flex-col items-center">
+                    <h3 className="text-[#1d1d1b] font-malkie-slab text-[28px] leading-[2.5] uppercase text-center mb-4">ZGJIDHNI HAPËSIRËN</h3>
                     
-                    <div className="grid grid-cols-3 gap-3 lg:gap-4 w-full max-w-[700px] mx-auto">
+                    <div
+                        className="relative left-1/2 flex -translate-x-1/2 flex-col items-center gap-8"
+                        style={contentWidthStyle}
+                    >
                         {/* Option 1: Sheshi Skënderbeu */}
                         <label 
-                            className={`group relative flex flex-col items-center p-2 lg:p-3 cursor-pointer transition-all duration-150 ${
+                            className={`group relative flex w-full flex-col items-center cursor-pointer transition-all duration-150 ${
                                 selectedSpace === 'Sheshi Skënderbeu'
                                     ? 'opacity-100'
                                     : 'opacity-100 hover:opacity-90'
                             }`}
                         >
-                            {/* Image - Fixed square size */}
-                            <div className="relative w-24 h-24 lg:w-44 lg:h-44 mb-3 lg:mb-4 overflow-hidden mx-auto">
+                            <div className="relative mb-3 aspect-[1672/941] w-full overflow-hidden rounded-md">
                                 <Image
                                     src={image2}
                                     alt="Sheshi Skënderbeu"
                                     fill
-                                    className="object-cover rounded-md"
+                                    className="object-cover"
+                                    style={{ borderRadius: '6px' }}
                                     priority={false}
                                 />
                             </div>
                             
-                            {/* Name */}
-                            <div className="flex flex-col items-center text-center w-full mb-3">
-                                <span className="text-[#367a3b] text-sm lg:text-base font-bold leading-tight">
+                            <div className="mb-3 flex w-full items-center justify-center gap-4">
+                                <span className="text-[#1d1d1b] font-malkie-slab text-[28px] leading-[2.5] uppercase text-center">
                                     Sheshi &quot;Skënderbeu&quot;
                                 </span>
-                            </div>
-
-                            {/* Checkbox */}
-                            <div className="flex items-center justify-center">
-                                <div className={`w-5 h-5 lg:w-6 lg:h-6 border-2 flex items-center justify-center transition-all ${
-                                    selectedSpace === 'Sheshi Skënderbeu'
-                                        ? 'border-[#36713b] bg-[#367a3b]'
-                                        : 'border-[#367a3b] group-hover:border-[#87c260] bg-transparent'
-                                }`}>
-                                    {selectedSpace === 'Sheshi Skënderbeu' && (
-                                        <svg className="w-3.5 h-3.5 lg:w-4 lg:h-4 text-[#c43b32]" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                        </svg>
-                                    )}
+                                <div className="flex shrink-0 items-center justify-center">
+                                    <div className={`w-5 h-5 lg:w-6 lg:h-6 border-2 flex items-center justify-center transition-all ${
+                                        selectedSpace === 'Sheshi Skënderbeu'
+                                            ? 'border-[#F6B817] bg-[#F6B817]'
+                                            : 'border-[#F6B817] group-hover:border-[#D93627] bg-transparent'
+                                    }`}>
+                                        {selectedSpace === 'Sheshi Skënderbeu' && (
+                                            <svg className="w-3.5 h-3.5 lg:w-4 lg:h-4 text-[#1d1d1b]" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                            </svg>
+                                        )}
+                                    </div>
+                                    <input
+                                        type="radio"
+                                        name="space"
+                                        value="Sheshi Skënderbeu"
+                                        checked={selectedSpace === 'Sheshi Skënderbeu'}
+                                        onChange={(e) => setSelectedSpace(e.target.value)}
+                                        className="absolute opacity-0 w-0 h-0" 
+                                    />
                                 </div>
-                                <input
-                                    type="radio"
-                                    name="space"
-                                    value="Sheshi Skënderbeu"
-                                    checked={selectedSpace === 'Sheshi Skënderbeu'}
-                                    onChange={(e) => setSelectedSpace(e.target.value)}
-                                    className="absolute opacity-0 w-0 h-0" 
-                                />
                             </div>
                         </label>
 
                         {/* Option 2: Sheshi Zahir Pajaziti */}
                         <label 
-                            className={`group relative flex flex-col items-center p-2 lg:p-3 cursor-pointer transition-all duration-150 ${
+                            className={`group relative flex w-full flex-col items-center cursor-pointer transition-all duration-150 ${
                                 selectedSpace === 'Sheshi Zahir Pajaziti'
                                     ? 'opacity-100'
                                     : 'opacity-100 hover:opacity-90'
                             }`}
                         >
-                            {/* Image - Fixed square size */}
-                            <div className="relative w-24 h-24 lg:w-44 lg:h-44 mb-3 lg:mb-4 overflow-hidden mx-auto">
+                            <div className="relative mb-3 aspect-[1672/941] w-full overflow-hidden rounded-md">
                                 <Image
                                     src={image1}
                                     alt="Sheshi Zahir Pajaziti"
                                     fill
-                                    className="object-cover rounded-md"
+                                    className="object-cover"
+                                    style={{ borderRadius: '6px' }}
                                     priority={false}
                                 />
                             </div>
                             
-                            {/* Name */}
-                            <div className="flex flex-col items-center text-center w-full mb-3">
-                                <span className="text-[#367a3b] text-sm lg:text-base font-bold leading-tight">
+                            <div className="mb-3 flex w-full items-center justify-center gap-4">
+                                <span className="text-[#1d1d1b] font-malkie-slab text-[28px] leading-[2.5] uppercase text-center">
                                     Sheshi &quot;Zahir Pajaziti&quot;
                                 </span>
-                            </div>
-
-                            {/* Checkbox */}
-                            <div className="flex items-center justify-center">
-                                <div className={`w-5 h-5 lg:w-6 lg:h-6 border-2 flex items-center justify-center transition-all ${
-                                    selectedSpace === 'Sheshi Zahir Pajaziti'
-                                        ? 'border-[#367a3b] bg-[#367a3b]'
-                                        : 'border-[#367a3b] group-hover:border-[#87c260] bg-transparent'
-                                }`}>
-                                    {selectedSpace === 'Sheshi Zahir Pajaziti' && (
-                                        <svg className="w-3.5 h-3.5 lg:w-4 lg:h-4 text-[#c43b32]" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                        </svg>
-                                    )}
+                                <div className="flex shrink-0 items-center justify-center">
+                                    <div className={`w-5 h-5 lg:w-6 lg:h-6 border-2 flex items-center justify-center transition-all ${
+                                        selectedSpace === 'Sheshi Zahir Pajaziti'
+                                            ? 'border-[#F6B817] bg-[#F6B817]'
+                                            : 'border-[#F6B817] group-hover:border-[#D93627] bg-transparent'
+                                    }`}>
+                                        {selectedSpace === 'Sheshi Zahir Pajaziti' && (
+                                            <svg className="w-3.5 h-3.5 lg:w-4 lg:h-4 text-[#1d1d1b]" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                            </svg>
+                                        )}
+                                    </div>
+                                    <input
+                                        type="radio"
+                                        name="space"
+                                        value="Sheshi Zahir Pajaziti"
+                                        checked={selectedSpace === 'Sheshi Zahir Pajaziti'}
+                                        onChange={(e) => setSelectedSpace(e.target.value)}
+                                        className="absolute opacity-0 w-0 h-0" 
+                                    />
                                 </div>
-                                <input
-                                    type="radio"
-                                    name="space"
-                                    value="Sheshi Zahir Pajaziti"
-                                    checked={selectedSpace === 'Sheshi Zahir Pajaziti'}
-                                    onChange={(e) => setSelectedSpace(e.target.value)}
-                                    className="absolute opacity-0 w-0 h-0" 
-                                />
-                            </div>
-                        </label>
-
-                        {/* Option 3: Wonderland */}
-                        <label 
-                            className={`group relative flex flex-col items-center p-2 lg:p-3 cursor-pointer transition-all duration-150 ${
-                                selectedSpace === 'Wonderland (me mjete motorike)'
-                                    ? 'opacity-100'
-                                    : 'opacity-100 hover:opacity-90'
-                            }`}
-                        >
-                            {/* Image - Fixed square size */}
-                            <div className="relative w-24 h-24 lg:w-44 lg:h-44 mb-3 lg:mb-4 overflow-hidden mx-auto">
-                                <Image
-                                    src={image3}
-                                    alt="Wonderland"
-                                    fill
-                                    className="object-cover rounded-md"
-                                    priority={false}
-                                />
-                            </div>
-                            
-                            {/* Name */}
-                            <div className="flex flex-col items-center text-center w-full mb-3">
-                                <span className="text-[#367a3b] text-sm lg:text-base font-bold leading-tight">
-                                    Sheshi &quot;Adem Jashari&quot; Prishtina Wonderland
-                                </span>
-                                <span className="text-[#031603]/80 text-[11px] underline underline-offset-4 lg:text-base mt-0.5 italic">(me mjete motorike)</span>
-                            </div>
-
-                            {/* Checkbox */}
-                            <div className="flex items-center justify-center">
-                                <div className={`w-5 h-5 lg:w-6 lg:h-6 border-2 flex items-center justify-center transition-all ${
-                                    selectedSpace === 'Wonderland (me mjete motorike)'
-                                        ? 'border-[#367a3b] bg-[#367a3b]'
-                                        : 'border-[#367a3b] group-hover:border-[#87c260] bg-transparent'
-                                }`}>
-                                    {selectedSpace === 'Wonderland (me mjete motorike)' && (
-                                        <svg className="w-3.5 h-3.5 lg:w-4 lg:h-4 text-[#c43b32]" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                        </svg>
-                                    )}
-                                </div>
-                                <input
-                                    type="radio"
-                                    name="space"
-                                    value="Wonderland (me mjete motorike)"
-                                    checked={selectedSpace === 'Wonderland (me mjete motorike)'}
-                                    onChange={(e) => setSelectedSpace(e.target.value)}
-                                    className="absolute opacity-0 w-0 h-0" 
-                                />
                             </div>
                         </label>
                     </div>
                 </div>
 
-                <div className="w-full max-w-[700px] mx-auto">
+                <div className="w-full max-w-[700px] mx-auto mt-4">
                     {loading || compressingFile ? (
                         <div className="w-full py-4 flex items-center justify-center">
                             <LoadingSpinner
@@ -554,16 +490,19 @@ export default function ContactForm() {
                     ) : (
                         <button
                             type="submit"
-                            className="w-full bg-[#367a3b] hover:bg-[#1d1d1b] text-white font-semibold py-3 rounded-md transition-all duration-300 shadow-md hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2"
+                            className="w-full bg-[#848F38] font-malkie-slab text-[34px] leading-[1.7] text-align-center uppercase text-white  rounded-md hover:bg-[#c43b32] text-sm transition-colors"
                         >
                             Dërgo
                         </button>
                     )}
                 </div>
-
-                <p className="text-center text-[#031603] text-[12px] font-malkieslab">© 2025 Prishtina Festive</p>
-                <Image src={pattern} alt="Logo" className="object-contain lg:w-[100ch] w-full pb-8 mx-auto" />
+                <p className="text-center text-[#031603] text-[12px] font-malkieslab mt-4">© 2025 Prishtina Festive</p>
             </form>
+            </div>
+
+            <div className="w-full pb-8 mt-[50px]">
+                <DecorativeBanner src={bannerBottom} alt="Akull n'Verë decorative banner" fullWidth />
+            </div>
 
             {showModal && (
                 <div 
@@ -586,7 +525,7 @@ export default function ContactForm() {
                             
                             {/* Thank You Message */}
                             <h2 className="text-center font-bold text-2xl text-[#1d1d1b] mb-4 leading-tight">
-                                Faleminderit <span className="font-bold text-[#367a3b]">{submittedFullName}</span> që aplikuat për shtëpizë në Verë n&rsquo;Dimën.
+                                Faleminderit <span className="font-bold text-[#367a3b]">{submittedFullName}</span> që aplikuat për shtëpizë në <span className="font-bold">Akull n&rsquo;Verë</span>.
                             </h2>
                             
                             {/* Professional Message */}
