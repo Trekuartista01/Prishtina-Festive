@@ -2,9 +2,9 @@
 
 import { useState, ChangeEvent, FormEvent } from 'react';
 import Image from 'next/image';
-import bannerTop from "../../../../public/assets/summer/banner-top.png";
+import bannerTop from "../../../../public/assets/summer/banner_top.png";
 import bannerBottom from "../../../../public/assets/summer/banner-bottom.png";
-import logo from "../../../../public/assets/summer/logo.png";
+import logo from "../../../../public/assets/summer/logo-akull-nver.png";
 import image1 from "../../../../public/assets/summer/shesh-zahir.png";
 import image2 from "../../../../public/assets/summer/shesh-skenderbeu.png";
 import LoadingSpinner from '../LoadingSpinner';
@@ -14,9 +14,8 @@ const BANNER_MAX_WIDTH = 800;
 const contentWidthStyle = { width: `min(calc(100vw - 3rem), ${BANNER_MAX_WIDTH}px)` };
 const fullWidthImageClass =
     'w-[calc((100vw-16px)*0.97)] sm:w-[calc((100vw-100px)*0.85)]';
-// 800 * 0.8 * 0.85 * 0.85 = 462px desktop max width
-const bannerTopImageClass =
-    'w-[min(calc(100vw-1rem),92vw)] sm:w-[min(calc(100vw-3rem),462px)]';
+const logoImageClass =
+    'w-[min(calc(100vw-1rem),94vw)] sm:w-[min(calc(100vw-3rem),540px)]';
 
 function DecorativeBanner({
     src,
@@ -165,7 +164,8 @@ export default function ContactForm() {
             } else if (response.status === 429) {
                 setTooManyRequests(true);
             } else {
-                setFileError(`Error: ${result.error}`);
+                const details = result.details ? ` (${result.details})` : '';
+                setFileError(`Error: ${result.error}${details}`);
             }
         } catch {
             setLoading(false);
@@ -241,14 +241,14 @@ export default function ContactForm() {
         <div className="w-full bg-white">
             {/* Hero */}
             <section className="flex flex-col items-center pt-[50px] pb-0 w-full">
-                <DecorativeBanner src={logo} alt="Colorful Edition 2026" priority fullWidth />
+                <DecorativeBanner src={bannerTop} alt="Krejt n'shesh Colorful Edition 2026" priority fullWidth />
 
                 <div className="mt-[25px] mb-[25px] w-full max-w-5xl px-1 text-center font-malkie-slab text-[13px] leading-[1.2] tracking-tight uppercase text-black sm:px-4 sm:text-[clamp(18px,3.2vw,32px)] sm:leading-[1.15] sm:tracking-normal">
                     <p>KËTU MUND TË GJENI DOKUMENTIN MBI DETAJET PËR APLIKIMIN</p>
                     <p>PËR SHTËPIZË NË COLORFUL EDITION 2026</p>
                 </div>
 
-                <div className="mt-4 flex flex-col items-center px-4 w-full">
+                <div className="flex flex-col items-center gap-[30px] px-4 w-full">
                     <a
                         href="/assets/Thirrje-për-aplikim.pdf"
                         target="_blank"
@@ -257,19 +257,26 @@ export default function ContactForm() {
                     >
                         Shiko dokumentin
                     </a>
-                    <div className="w-full mt-[50px]">
-                        <DecorativeBanner src={bannerTop} alt="Akull n'Verë decorative banner" priority imageClassName={bannerTopImageClass} />
+                    <div className={`${logoImageClass} aspect-square shrink-0 overflow-hidden`}>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                            src={logo.src}
+                            alt="Akull n'Verë"
+                            width={logo.width}
+                            height={logo.height}
+                            loading="eager"
+                            className="h-full w-full object-cover object-center"
+                        />
+                    </div>
+                    <div className="w-full max-w-[409px] text-center">
+                        <p className="text-[32px] uppercase font-malkie-slab text-[#1d1d1b]">Apliko këtu!</p>
+                        <p className="text-center text-[16px] font-aeonik-pro text-[#1d1d1b] mt-2">Plotëso të dhënat në hapësirat e mëposhtme për të aplikuar për shtëpizë në <b>&quot;Akull n&rsquo;Verë&quot;.</b></p>
                     </div>
                 </div>
             </section>
 
             <div className="flex justify-center px-4 sm:px-8 pb-8">
             <form onSubmit={handleSubmit} className="w-full max-w-3xl">
-                <div className='lg:w-[409px] mx-auto mt-[50px]'>
-                    <p className="text-[32px] text-center uppercase font-malkie-slab text-[#1d1d1b]">Apliko këtu!</p>
-                    <p className="text-center text-[16px] font-aeonik-pro text-[#1d1d1b] mt-2">Plotëso të dhënat në hapësirat e mëposhtme për të aplikuar për shtëpizë në <b>&quot;Akull n&rsquo;Verë&quot;.</b></p>
-                </div>
-
                 {/* SEKSIONI 1: INFORMATA PERSONALE */}
                 <div className="space-y-4 mt-4">
                     

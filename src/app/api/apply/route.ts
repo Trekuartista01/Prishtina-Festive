@@ -3,6 +3,19 @@ import { uploadToCloudinary } from '@/lib/cloudinary';
 import { parseBase64File } from '@/lib/file-utils';
 import Applicant from '@/models/Applicant';
 
+function getErrorMessage(error: unknown): string {
+  if (error instanceof Error) return error.message;
+  if (typeof error === 'string') return error;
+  if (error && typeof error === 'object' && 'message' in error) {
+    return String((error as { message: unknown }).message);
+  }
+  try {
+    return JSON.stringify(error);
+  } catch {
+    return 'Unknown error';
+  }
+}
+
 export async function POST(req: Request) {
   try {
     const {
@@ -78,7 +91,7 @@ export async function POST(req: Request) {
     );
   } catch (error) {
     console.error('Apply error:', error);
-    const details = error instanceof Error ? error.message : 'Unknown error';
+    const details = getErrorMessage(error);
     return Response.json(
       { error: 'Gabim gjatë ruajtjes së aplikimit.', details },
       { status: 500 }
