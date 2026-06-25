@@ -59,11 +59,11 @@ export default function ListaLogin({ onSuccess }: ListaLoginProps) {
       <div className="w-full max-w-md border border-[#031603] rounded-xl p-8">
         <div className="flex flex-col items-center mb-8">
           <Image
-            src="/assets/logo-2025.png"
-            alt="Logo"
-            width={100}
-            height={100}
-            className="w-24 h-24 object-contain mb-4"
+            src="/assets/summer/logo-akull-nver.png"
+            alt="Akull n'Verë"
+            width={184}
+            height={184}
+            className="w-[184px] h-[184px] object-contain mb-4"
           />
           <h1 className="text-xl font-bold text-[#031603] text-center">
             Hyrje në Listën e Aplikuesve

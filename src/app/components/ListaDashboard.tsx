@@ -199,6 +199,29 @@ export default function ListaDashboard({ onLogout }: ListaDashboardProps) {
     }
   };
 
+  const handleDeleteApplicant = async (applicantId: string, fullName: string) => {
+    if (
+      !confirm(
+        `A jeni i sigurt që dëshironi ta fshini aplikantin "${fullName}"? Ky veprim do të fshijë edhe dokumentet e ngarkuara dhe nuk mund të zhbëhet.`
+      )
+    )
+      return;
+
+    setDeletingId(applicantId);
+    try {
+      const response = await fetch(`/api/applicants/${applicantId}`, { method: 'DELETE' });
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Gabim gjatë fshirjes');
+      }
+      setApplicants((prev) => prev.filter((a) => a._id !== applicantId));
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Gabim gjatë fshirjes');
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
   const handleLogout = async () => {
     await fetch('/api/lista-auth', { method: 'DELETE' });
     onLogout();
@@ -225,7 +248,7 @@ export default function ListaDashboard({ onLogout }: ListaDashboardProps) {
       <div className="mb-6 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div>
           <div className="flex items-center gap-4 mb-3">
-            <Image src="/assets/summer/banner-top.png" alt="Logo" width={100} height={100} className="w-20 h-20 object-contain" />
+            <Image src="/assets/summer/logo-akull-nver.png" alt="Logo" width={100} height={100} className="w-20 h-20 object-contain" />
             <h1 className="text-2xl sm:text-3xl font-bold text-[#031603] font-aerialpro">
               Lista e Aplikuesve për Shtëpizë në Akull n&apos;Verë
             </h1>
@@ -382,13 +405,14 @@ export default function ListaDashboard({ onLogout }: ListaDashboardProps) {
               <th className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider border-b-2 border-[#031603] border-r border-[#031603]/50 hidden sm:table-cell">Telefoni</th>
               <th className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider border-b-2 border-[#031603] border-r border-[#031603]/50">Hapësira</th>
               <th className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider border-b-2 border-[#031603] border-r border-[#031603]/50">Dokumentet</th>
-              <th className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider border-b-2 border-[#031603]">Data e aplikimit</th>
+              <th className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider border-b-2 border-[#031603] border-r border-[#031603]/50">Data e aplikimit</th>
+              <th className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wider border-b-2 border-[#031603]">Veprime</th>
             </tr>
           </thead>
           <tbody>
             {paginatedApplicants.length === 0 ? (
               <tr>
-                <td colSpan={8} className="text-center py-12 text-[#031603]/45 text-sm font-medium">
+                <td colSpan={9} className="text-center py-12 text-[#031603]/45 text-sm font-medium">
                   Nuk ka aplikantë për të shfaqur.
                 </td>
               </tr>
@@ -435,8 +459,18 @@ export default function ListaDashboard({ onLogout }: ListaDashboardProps) {
                         </button>
                       </div>
                     </td>
-                    <td className="px-4 py-3.5 text-[#031603] font-semibold text-xs whitespace-nowrap">
+                    <td className="px-4 py-3.5 text-[#031603] font-semibold text-xs whitespace-nowrap border-r border-[#031603]/50">
                       {new Date(applicant.createdAt).toLocaleDateString('sq-AL')}
+                    </td>
+                    <td className="px-4 py-3.5 whitespace-nowrap">
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteApplicant(applicant._id, applicant.fullName)}
+                        disabled={deletingId === applicant._id}
+                        className="px-2.5 py-1 text-[11px] font-bold text-red-700 border border-red-700/40 rounded-md hover:bg-red-700 hover:text-white transition disabled:opacity-40"
+                      >
+                        {deletingId === applicant._id ? '...' : 'Fshi'}
+                      </button>
                     </td>
                   </tr>
                 );

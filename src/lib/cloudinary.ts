@@ -74,6 +74,11 @@ export async function uploadToCloudinary(
   };
 }
 
+export async function deleteFromCloudinary(publicId: string): Promise<void> {
+  if (!publicId) return;
+  await cloudinary.uploader.destroy(publicId, { resource_type: 'image', invalidate: true });
+}
+
 export function getDocumentViewUrl(
   url: string,
   publicId: string,
