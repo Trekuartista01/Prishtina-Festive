@@ -4,7 +4,6 @@ import { useState, ChangeEvent, FormEvent } from 'react';
 import Image from 'next/image';
 import bannerTop from "../../../../public/assets/summer/banner_top.png";
 import bannerBottom from "../../../../public/assets/summer/banner-bottom.png";
-import logo from "../../../../public/assets/summer/logo-akull-nver.png";
 import image1 from "../../../../public/assets/summer/shesh-zahir.png";
 import image2 from "../../../../public/assets/summer/shesh-skenderbeu.png";
 import LoadingSpinner from '../LoadingSpinner';
@@ -248,27 +247,27 @@ export default function ContactForm() {
                     <p>PËR SHTËPIZË NË COLORFUL EDITION 2026</p>
                 </div>
 
-                <div className="flex flex-col items-center gap-[30px] px-4 w-full">
+                <div className="flex flex-col items-center px-4 w-full">
                     <a
                         href="/assets/Thirrje-për-aplikim.pdf"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center justify-center bg-[#FFB33E] px-12 py-3 font-malkie-slab text-[clamp(20px,3vw,32px)] uppercase leading-[1.1] text-black rounded-none transition-colors hover:bg-[#f0a030]"
+                        className="relative z-10 inline-flex shrink-0 items-center justify-center bg-[#FFB33E] px-12 py-3 font-malkie-slab text-[clamp(20px,3vw,32px)] uppercase leading-[1.25] text-black rounded-none transition-colors hover:bg-[#f0a030]"
                     >
                         Shiko dokumentin
                     </a>
-                    <div className={`${logoImageClass} aspect-square shrink-0 overflow-hidden`}>
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                            src={logo.src}
-                            alt="Akull n'Verë"
-                            width={logo.width}
-                            height={logo.height}
-                            loading="eager"
-                            className="h-full w-full object-cover object-center"
+                    <div className={`relative z-0 ${logoImageClass} -my-[50px] leading-none`}>
+                        <video
+                            src="/assets/summer/logo-alpha.webm"
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            className="block w-full h-auto"
+                            aria-label="Akull n'Verë"
                         />
                     </div>
-                    <div className="w-full max-w-[409px] text-center">
+                    <div className="relative z-10 w-full max-w-[409px] text-center">
                         <p className="text-[32px] uppercase font-malkie-slab text-[#1d1d1b]">Apliko këtu!</p>
                         <p className="text-center text-[16px] font-aeonik-pro text-[#1d1d1b] mt-2">Plotëso të dhënat në hapësirat e mëposhtme për të aplikuar për shtëpizë në <b>&quot;Akull n&rsquo;Verë&quot;.</b></p>
                     </div>
