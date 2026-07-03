@@ -258,12 +258,21 @@ export default function ContactForm() {
                     </a>
                     <div className={`relative z-0 ${logoImageClass} -my-[50px] leading-none`}>
                         <video
+                            src="/assets/summer/logo-white-compressed.webm"
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            className="block w-full bg-white sm:hidden"
+                            aria-label="Akull n'Verë"
+                        />
+                        <video
                             src="/assets/summer/logo-alpha.webm"
                             autoPlay
                             loop
                             muted
                             playsInline
-                            className="block w-full h-auto"
+                            className="hidden w-full bg-transparent sm:block sm:h-auto"
                             aria-label="Akull n'Verë"
                         />
                     </div>
