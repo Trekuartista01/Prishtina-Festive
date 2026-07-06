@@ -53,7 +53,11 @@ function DecorativeBanner({
     );
 }
 
-export default function ContactForm() {
+export default function ContactForm({
+    applicationsOpen = true,
+}: {
+    applicationsOpen?: boolean;
+}) {
     const [fullName, setFullName] = useState('');
     const [companyName, setCompanyName] = useState('');
     const [companyEmail, setCompanyEmail] = useState('');
@@ -88,6 +92,10 @@ export default function ContactForm() {
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
+        if (!applicationsOpen) {
+            return;
+        }
 
         if (!businessCertificate) {
             setFileError("Ju lutem ngarkoni certifikatën e biznesit të regjistruar në ARBK.");
@@ -242,21 +250,25 @@ export default function ContactForm() {
             <section className="flex flex-col items-center pt-[50px] pb-0 w-full">
                 <DecorativeBanner src={bannerTop} alt="Krejt n'shesh Colorful Edition 2026" priority fullWidth />
 
-                <div className="mt-[25px] mb-[25px] w-full max-w-5xl px-1 text-center font-malkie-slab text-[13px] leading-[1.2] tracking-tight uppercase text-black sm:px-4 sm:text-[clamp(18px,3.2vw,32px)] sm:leading-[1.15] sm:tracking-normal">
-                    <p>KËTU MUND TË GJENI DOKUMENTIN MBI DETAJET PËR APLIKIMIN</p>
-                    <p>PËR SHTËPIZË NË COLORFUL EDITION 2026</p>
-                </div>
+                {applicationsOpen ? (
+                    <div className="mt-[25px] mb-[25px] w-full max-w-5xl px-1 text-center font-malkie-slab text-[13px] leading-[1.2] tracking-tight uppercase text-black sm:px-4 sm:text-[clamp(18px,3.2vw,32px)] sm:leading-[1.15] sm:tracking-normal">
+                        <p>KËTU MUND TË GJENI DOKUMENTIN MBI DETAJET PËR APLIKIMIN</p>
+                        <p>PËR SHTËPIZË NË COLORFUL EDITION 2026</p>
+                    </div>
+                ) : null}
 
                 <div className="flex flex-col items-center px-4 w-full">
-                    <a
-                        href="/assets/Thirrje-për-aplikim.pdf"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="relative z-10 inline-flex shrink-0 items-center justify-center bg-[#FFB33E] px-12 py-3 font-malkie-slab text-[clamp(20px,3vw,32px)] uppercase leading-[1.25] text-black rounded-none transition-colors hover:bg-[#f0a030]"
-                    >
-                        Shiko dokumentin
-                    </a>
-                    <div className={`relative z-0 ${logoImageClass} -my-[50px] leading-none`}>
+                    {applicationsOpen ? (
+                        <a
+                            href="/assets/Thirrje-për-aplikim.pdf"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="relative z-10 inline-flex shrink-0 items-center justify-center bg-[#FFB33E] px-12 py-3 font-malkie-slab text-[clamp(20px,3vw,32px)] uppercase leading-[1.25] text-black rounded-none transition-colors hover:bg-[#f0a030]"
+                        >
+                            Shiko dokumentin
+                        </a>
+                    ) : null}
+                    <div className={`relative z-0 ${logoImageClass} leading-none ${applicationsOpen ? '-my-[50px]' : 'mt-[50px] mb-0'}`}>
                         <video
                             src="/assets/summer/logo-white-compressed.webm"
                             autoPlay
@@ -276,13 +288,27 @@ export default function ContactForm() {
                             aria-label="Akull n'Verë"
                         />
                     </div>
-                    <div className="relative z-10 w-full max-w-[409px] text-center">
-                        <p className="text-[32px] uppercase font-malkie-slab text-[#1d1d1b]">Apliko këtu!</p>
-                        <p className="text-center text-[16px] font-aeonik-pro text-[#1d1d1b] mt-2">Plotëso të dhënat në hapësirat e mëposhtme për të aplikuar për shtëpizë në <b>&quot;Akull n&rsquo;Verë&quot;.</b></p>
+                    <div className={`relative z-10 w-full text-center ${applicationsOpen ? 'max-w-[409px]' : 'max-w-3xl px-2'}`}>
+                        {applicationsOpen ? (
+                            <>
+                                <p className="text-[32px] uppercase font-malkie-slab text-[#1d1d1b]">Apliko këtu!</p>
+                                <p className="text-center text-[16px] font-aeonik-pro text-[#1d1d1b] mt-2">Plotëso të dhënat në hapësirat e mëposhtme për të aplikuar për shtëpizë në <b>&quot;Akull n&rsquo;Verë&quot;.</b></p>
+                            </>
+                        ) : (
+                            <>
+                                <p className="font-malkie-slab text-[clamp(36px,10vw,64px)] uppercase leading-[1.1] text-[#1d1d1b]">
+                                    Aplikimet janë mbyllur
+                                </p>
+                                <p className="mt-4 font-aeonik-pro text-[clamp(18px,4.5vw,28px)] leading-snug text-[#1d1d1b]">
+                                    Koha për aplikim ka përfunduar. Faleminderit për interesimin tuaj!
+                                </p>
+                            </>
+                        )}
                     </div>
                 </div>
             </section>
 
+            {applicationsOpen ? (
             <div className="flex justify-center px-4 sm:px-8 pb-8">
             <form onSubmit={handleSubmit} className="w-full max-w-3xl">
                 {/* SEKSIONI 1: INFORMATA PERSONALE */}
@@ -514,6 +540,7 @@ export default function ContactForm() {
                 <p className="text-center text-[#031603] text-[12px] font-malkieslab mt-4">© 2025 Prishtina Festive</p>
             </form>
             </div>
+            ) : null}
 
             <div className="w-full pb-8 mt-[50px]">
                 <DecorativeBanner src={bannerBottom} alt="Akull n'Verë decorative banner" fullWidth />

@@ -1,3 +1,4 @@
+import { APPLICATIONS_CLOSED_MESSAGE, areApplicationsOpen } from '@/lib/applications';
 import { connectDB } from '@/lib/mongodb';
 import { uploadToCloudinary } from '@/lib/cloudinary';
 import { parseBase64File } from '@/lib/file-utils';
@@ -18,6 +19,10 @@ function getErrorMessage(error: unknown): string {
 
 export async function POST(req: Request) {
   try {
+    if (!areApplicationsOpen()) {
+      return Response.json({ error: APPLICATIONS_CLOSED_MESSAGE }, { status: 403 });
+    }
+
     const {
       name,
       surname,
