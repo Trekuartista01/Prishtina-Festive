@@ -40,8 +40,8 @@ export const metadata: Metadata = {
   title: "PRISHTINA FESTIVE",
   description: "Prishtina Festive",
   icons: {
-    icon: "/assets/winter/logo-vere-ndimen.png",
-    apple: "/assets/winter/logo-vere-ndimen.png",
+    icon: "/assets/winter/logo-festive.png",
+    apple: "/assets/winter/logo-festive.png",
   },
 };
 

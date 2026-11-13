@@ -383,13 +383,17 @@ export default function ContactForm({
                                         selected ? 'outline outline-4 outline-[#D93627] sm:outline-[5px]' : ''
                                     }`}
                                 >
-                                    <Image
-                                        src={space.image}
-                                        alt=""
-                                        fill
-                                        sizes="(max-width: 860px) 100vw, 800px"
-                                        className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
-                                    />
+                                    {space.image ? (
+                                        <Image
+                                            src={space.image}
+                                            alt=""
+                                            fill
+                                            sizes="(max-width: 860px) 100vw, 800px"
+                                            className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+                                        />
+                                    ) : (
+                                        <div className="winter-pattern-a absolute inset-0 transition-transform duration-300 group-hover:scale-[1.02]" />
+                                    )}
                                 </div>
                                 <span className="flex items-center gap-[10px] bg-transparent sm:gap-4">
                                     <span className="flex flex-col items-center bg-transparent">

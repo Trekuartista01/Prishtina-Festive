@@ -13,9 +13,9 @@ export const EDITION = {
   /** Name of the market used in the copy. */
   name: "Verë n'Dimën",
   year: 2026,
-  /** Call-for-applications PDF. TODO: add the winter 2026 PDF at this path. */
+  /** Call-for-applications PDF (download button). */
   documentUrl: '/assets/winter/Thirrje-per-aplikim-2026.pdf',
-  logo: '/assets/winter/logo-vere-ndimen.png',
+  logo: '/assets/winter/logo-festive.png',
 } as const;
 
 export type EditionSpace = {
@@ -23,24 +23,19 @@ export type EditionSpace = {
   value: string;
   title: string;
   subtitle?: string;
-  image: string;
+  /** Photo of the square; a patterned placeholder is shown when missing. */
+  image?: string;
 };
 
 export const EDITION_SPACES: EditionSpace[] = [
-  {
-    value: 'Sheshi Skënderbeu',
-    title: 'Sheshi "Skënderbeu"',
-    image: '/assets/winter/shesh-skenderbeu.png',
-  },
   {
     value: 'Sheshi Zahir Pajaziti',
     title: 'Sheshi "Zahir Pajaziti"',
     image: '/assets/winter/shesh-zahir.png',
   },
   {
-    value: 'Wonderland (me mjete motorike)',
-    title: 'Prishtina Wonderland',
-    subtitle: 'Sheshi "Adem Jashari" · me mjete motorike',
-    image: '/assets/winter/shesh-wonderland.png',
+    value: 'Sheshi Xhorxh Bush',
+    title: 'Sheshi "Xhorxh Bush"',
+    image: '/assets/winter/shesh-bush.png',
   },
 ];

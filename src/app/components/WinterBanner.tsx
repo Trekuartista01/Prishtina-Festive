@@ -1,6 +1,6 @@
 import { EDITION } from '@/lib/edition';
 
-const WORD_COLORS = ['#5FA8DC', '#FFFFFF', '#E2493A', '#4CAF5E', '#F6B817', '#5FA8DC', '#FFFFFF'];
+const WORD_COLORS = ['#87C260', '#E2493A', '#87C260', '#E2493A', '#87C260', '#E2493A', '#87C260'];
 
 /** Top banner: "KREJT N'SHESH" + winter pattern / "FESTIVE EDITION" + date. */
 export function WinterBanner() {
