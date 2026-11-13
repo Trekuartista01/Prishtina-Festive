@@ -5,9 +5,9 @@
 export const EDITION = {
   /** Campaign line shown in the top banner. */
   campaign: "KREJT N'SHESH",
-  /** Edition label next to the pattern, e.g. "WINTER EDITION". */
+  /** Edition label next to the pattern, e.g. "FESTIVE EDITION". */
   editionLabel: 'EDITION',
-  editionWord: 'WINTER',
+  editionWord: 'FESTIVE',
   /** Date shown in the banner. TODO: set the real opening date (e.g. "12.12.26"). */
   date: '03.12.26',
   /** Name of the market used in the copy. */
