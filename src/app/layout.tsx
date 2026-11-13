@@ -28,12 +28,20 @@ const aeonikProBold = localFont({
   variable: "--font-aeonik-pro-bold",
 });
 
+const barlowCondensed = localFont({
+  src: [
+    { path: "../../public/fonts/barlow-condensed/barlow-condensed-latin-600-normal.woff2", weight: "600" },
+    { path: "../../public/fonts/barlow-condensed/barlow-condensed-latin-800-normal.woff2", weight: "800" },
+  ],
+  variable: "--font-barlow-condensed",
+});
+
 export const metadata: Metadata = {
   title: "PRISHTINA FESTIVE",
   description: "Prishtina Festive",
   icons: {
-    icon: "/assets/summer/logo-akull-nver.png",
-    apple: "/assets/summer/logo-akull-nver.png",
+    icon: "/assets/winter/logo-vere-ndimen.png",
+    apple: "/assets/winter/logo-vere-ndimen.png",
   },
 };
 
@@ -45,7 +53,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${malkieSlab.variable} ${aeonikPro.variable} ${aeonikProBold.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${malkieSlab.variable} ${aeonikPro.variable} ${aeonikProBold.variable} ${barlowCondensed.variable} antialiased`}
       >
         {children}
       </body>

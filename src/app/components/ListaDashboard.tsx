@@ -9,6 +9,7 @@ import DocumentViewer from './DocumentViewer';
 import WinnersListEditor, { WinnerEntry } from './WinnersListEditor';
 import ViewIcon from './icons/ViewIcon';
 import { WINNER_SPACES, spaceMapping } from '@/lib/winners-list';
+import { EDITION } from '@/lib/edition';
 
 const spaces = [...WINNER_SPACES];
 
@@ -248,9 +249,9 @@ export default function ListaDashboard({ onLogout }: ListaDashboardProps) {
       <div className="mb-6 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div>
           <div className="flex items-center gap-4 mb-3">
-            <Image src="/assets/summer/logo-akull-nver.png" alt="Logo" width={100} height={100} className="w-20 h-20 object-contain" />
+            <Image src={EDITION.logo} alt="Logo" width={100} height={100} className="w-20 h-20 object-contain" />
             <h1 className="text-2xl sm:text-3xl font-bold text-[#031603] font-aerialpro">
-              Lista e Aplikuesve për Shtëpizë në Akull n&apos;Verë
+              Lista e Aplikuesve për Shtëpizë në {EDITION.name}
             </h1>
           </div>
           <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 text-xs sm:text-sm text-gray-600 font-aerialpro">

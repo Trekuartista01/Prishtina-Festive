@@ -155,3 +155,29 @@
 .shadow-3xl {
   box-shadow: 0 35px 60px -12px rgba(0, 0, 0, 0.25);
 }
+/* Winter edition */
+.font-barlow-condensed {
+  font-family: var(--font-barlow-condensed), 'Arial Narrow', sans-serif;
+}
+
+.winter-pattern-a,
+.winter-pattern-b {
+  background-color: #141414;
+  background-repeat: repeat-x;
+  background-size: auto 100%;
+}
+
+.winter-pattern-a {
+  background-image: url('/assets/winter/pattern-a.svg');
+  background-position: left center;
+}
+
+.winter-pattern-b {
+  background-image: url('/assets/winter/pattern-b.svg');
+  background-position: right center;
+}
+
+.winter-field::placeholder {
+  color: #141414;
+  opacity: 1;
+}

@@ -2,53 +2,42 @@
 
 import { useState, ChangeEvent, FormEvent } from 'react';
 import Image from 'next/image';
-import bannerTop from "../../../../public/assets/summer/banner_top.png";
-import bannerBottom from "../../../../public/assets/summer/banner-bottom.png";
-import image1 from "../../../../public/assets/summer/shesh-zahir.png";
-import image2 from "../../../../public/assets/summer/shesh-skenderbeu.png";
 import LoadingSpinner from '../LoadingSpinner';
+import { WinterBanner, WinterFooterBanner } from '../WinterBanner';
+import { EDITION, EDITION_SPACES } from '@/lib/edition';
 
-const BANNER_MAX_WIDTH = 800;
+const fieldClass =
+    'winter-field block w-full rounded-md border border-[#5FA8DC] bg-[#DCEEFA] px-4 py-[14px] text-center text-[#141414] transition-colors focus:border-[#141414] focus:outline-none';
 
-const contentWidthStyle = { width: `min(calc(100vw - 3rem), ${BANNER_MAX_WIDTH}px)` };
-const fullWidthImageClass =
-    'w-[calc((100vw-16px)*0.97)] sm:w-[calc((100vw-100px)*0.85)]';
-const logoImageClass =
-    'w-[min(calc(100vw-1rem),94vw)] sm:w-[min(calc(100vw-3rem),540px)]';
-
-function DecorativeBanner({
-    src,
-    alt,
-    priority = false,
-    maxWidth = BANNER_MAX_WIDTH,
-    fullWidth = false,
-    imageClassName = '',
+function FilePicker({
+    file,
+    onChange,
+    label,
+    hint,
 }: {
-    src: typeof bannerTop;
-    alt: string;
-    priority?: boolean;
-    maxWidth?: number;
-    fullWidth?: boolean;
-    imageClassName?: string;
+    file: File | null;
+    onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+    label: string;
+    hint: string;
 }) {
-    const responsiveWidthClass = imageClassName || (fullWidth ? fullWidthImageClass : '');
-
     return (
-        <div className={`flex w-full justify-center ${fullWidth ? 'relative left-1/2 -translate-x-1/2' : ''}`}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-                src={src.src}
-                alt={alt}
-                width={src.width}
-                height={src.height}
-                loading={priority ? 'eager' : 'lazy'}
-                className={`block h-auto max-w-full ${responsiveWidthClass}`}
-                style={
-                    responsiveWidthClass
-                        ? undefined
-                        : { width: `min(calc(100vw - 3rem), ${maxWidth}px)` }
-                }
-            />
+        <div className="flex min-w-0 flex-1 flex-col gap-2">
+            <label className="flex cursor-pointer items-center gap-3 rounded-md border border-[#5FA8DC] bg-[#DCEEFA] px-3 py-[10px] text-[14px] text-[#141414] transition-colors focus-within:border-[#141414] hover:border-[#141414]">
+                <span className="whitespace-nowrap rounded bg-[#141414] px-4 py-2 font-semibold text-white">
+                    Zgjidh dokumentin
+                </span>
+                <span className={`min-w-0 truncate bg-transparent ${file ? 'font-semibold text-[#1F5C2B]' : ''}`}>
+                    {file ? `✓ ${file.name}` : 'Asnjë dokument'}
+                </span>
+                <input
+                    type="file"
+                    accept=".pdf, .jpg, .jpeg, .png"
+                    onChange={onChange}
+                    aria-label={label}
+                    className="sr-only"
+                />
+            </label>
+            <p className="bg-transparent text-center text-[13px] italic text-[#B3261E] lg:text-left">{hint}</p>
         </div>
     );
 }
@@ -99,11 +88,13 @@ export default function ContactForm({
 
         if (!businessCertificate) {
             setFileError("Ju lutem ngarkoni certifikatën e biznesit të regjistruar në ARBK.");
+            setShowFileErrorModal(true);
             return;
         }
 
         if (!personalDocument) {
             setFileError("Ju lutem ngarkoni dokumentin personal të identifikimit.");
+            setShowFileErrorModal(true);
             return;
         }
 
@@ -247,282 +238,191 @@ export default function ContactForm({
     return (
         <div className="w-full bg-white">
             {/* Hero */}
-            <section className="flex flex-col items-center pt-[50px] pb-0 w-full">
-                <DecorativeBanner src={bannerTop} alt="Krejt n'shesh Colorful Edition 2026" priority fullWidth />
+            <section className="flex w-full flex-col items-center px-3 pt-6 sm:px-8 sm:pt-12">
+                <WinterBanner />
 
                 {applicationsOpen ? (
-                    <div className="mt-[25px] mb-[25px] w-full max-w-5xl px-1 text-center font-malkie-slab text-[13px] leading-[1.2] tracking-tight uppercase text-black sm:px-4 sm:text-[clamp(18px,3.2vw,32px)] sm:leading-[1.15] sm:tracking-normal">
-                        <p>KËTU MUND TË GJENI DOKUMENTIN MBI DETAJET PËR APLIKIMIN</p>
-                        <p>PËR SHTËPIZË NË COLORFUL EDITION 2026</p>
-                    </div>
-                ) : null}
-
-                <div className="flex flex-col items-center px-4 w-full">
-                    {applicationsOpen ? (
+                    <>
+                        <div className="mt-6 max-w-[1000px] text-center font-malkie-slab text-[16px] uppercase leading-[1.25] text-[#141414] sm:mt-9 sm:text-[clamp(20px,2.6vw,30px)]">
+                            <p>Këtu mund të gjeni dokumentin mbi detajet për aplikimin</p>
+                            <p>për shtëpizë në {EDITION.name} {EDITION.year}</p>
+                        </div>
                         <a
-                            href="/assets/Thirrje-për-aplikim.pdf"
+                            href={EDITION.documentUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="relative z-10 inline-flex shrink-0 items-center justify-center bg-[#FFB33E] px-12 py-3 font-malkie-slab text-[clamp(20px,3vw,32px)] uppercase leading-[1.25] text-black rounded-none transition-colors hover:bg-[#f0a030]"
+                            className="mt-5 inline-flex items-center justify-center bg-[#D93627] px-8 py-3 font-malkie-slab text-[22px] uppercase leading-[1.25] text-white transition-colors hover:bg-[#141414] sm:mt-7 sm:px-[52px] sm:py-[14px] sm:text-[30px]"
                         >
                             Shiko dokumentin
                         </a>
-                    ) : null}
-                    <div className={`relative z-0 ${logoImageClass} leading-none ${applicationsOpen ? '-my-[50px]' : 'mt-[50px] mb-0'}`}>
-                        <video
-                            src="/assets/summer/logo-white-compressed.webm"
-                            autoPlay
-                            loop
-                            muted
-                            playsInline
-                            className="block w-full bg-white sm:hidden"
-                            aria-label="Akull n'Verë"
-                        />
-                        <video
-                            src="/assets/summer/logo-alpha.webm"
-                            autoPlay
-                            loop
-                            muted
-                            playsInline
-                            className="hidden w-full bg-transparent sm:block sm:h-auto"
-                            aria-label="Akull n'Verë"
-                        />
-                    </div>
-                    <div className={`relative z-10 w-full text-center ${applicationsOpen ? 'max-w-[409px]' : 'max-w-3xl px-2'}`}>
-                        {applicationsOpen ? (
-                            <>
-                                <p className="text-[32px] uppercase font-malkie-slab text-[#1d1d1b]">Apliko këtu!</p>
-                                <p className="text-center text-[16px] font-aeonik-pro text-[#1d1d1b] mt-2">Plotëso të dhënat në hapësirat e mëposhtme për të aplikuar për shtëpizë në <b>&quot;Akull n&rsquo;Verë&quot;.</b></p>
-                            </>
-                        ) : (
-                            <>
-                                <p className="font-malkie-slab text-[clamp(36px,10vw,64px)] uppercase leading-[1.1] text-[#1d1d1b]">
-                                    Aplikimet janë mbyllur
-                                </p>
-                                <p className="mt-4 font-aeonik-pro text-[clamp(18px,4.5vw,28px)] leading-snug text-[#1d1d1b]">
-                                    Koha për aplikim ka përfunduar. Faleminderit për interesimin tuaj!
-                                </p>
-                            </>
-                        )}
-                    </div>
+                    </>
+                ) : null}
+
+                <Image
+                    src={EDITION.logo}
+                    alt={`${EDITION.name} — Bashkë në Shesh!`}
+                    width={420}
+                    height={420}
+                    priority
+                    className="mt-7 h-auto w-[270px] max-w-[80%] sm:mt-10 sm:w-[420px]"
+                />
+
+                <div className={`mt-6 w-full text-center sm:mt-8 ${applicationsOpen ? 'max-w-[440px]' : 'max-w-3xl px-2'}`}>
+                    {applicationsOpen ? (
+                        <>
+                            <h1 className="font-malkie-slab text-[30px] uppercase leading-[1.2] text-[#141414] sm:text-[34px]">
+                                Apliko këtu!
+                            </h1>
+                            <p className="mt-2 text-[16px] text-[#141414]">
+                                Plotëso të dhënat në hapësirat e mëposhtme për të aplikuar për shtëpizë në{' '}
+                                <b>&quot;{EDITION.name}&quot;</b>.
+                            </p>
+                        </>
+                    ) : (
+                        <>
+                            <p className="font-malkie-slab text-[clamp(36px,10vw,64px)] uppercase leading-[1.1] text-[#141414]">
+                                Aplikimet janë mbyllur
+                            </p>
+                            <p className="mt-4 text-[clamp(18px,4.5vw,28px)] leading-snug text-[#141414]">
+                                Koha për aplikim ka përfunduar. Faleminderit për interesimin tuaj!
+                            </p>
+                        </>
+                    )}
                 </div>
             </section>
 
             {applicationsOpen ? (
-            <div className="flex justify-center px-4 sm:px-8 pb-8">
-            <form onSubmit={handleSubmit} className="w-full max-w-3xl">
+            <div className="flex justify-center px-3 sm:px-8">
+            <form onSubmit={handleSubmit} className="mt-7 flex w-full max-w-[800px] flex-col items-center">
                 {/* SEKSIONI 1: INFORMATA PERSONALE */}
-                <div className="space-y-4 mt-4">
-                    
-                    <div className="w-full max-w-[700px] mx-auto space-y-4">
+                <div className="flex w-full max-w-[700px] flex-col gap-4">
+                    <input
+                        type="text"
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
+                        placeholder="Shkruani emrin dhe mbiemrin"
+                        aria-label="Emri dhe mbiemri"
+                        required
+                        className={fieldClass}
+                    />
+                    <input
+                        type="text"
+                        value={companyName}
+                        onChange={(e) => setCompanyName(e.target.value)}
+                        placeholder="Emri i kompanisë"
+                        aria-label="Emri i kompanisë"
+                        required
+                        className={fieldClass}
+                    />
+                    <div className="flex flex-col gap-4 lg:flex-row">
                         <input
-                            type="text"
-                            value={fullName}
-                            onChange={(e) => setFullName(e.target.value)}
-                            placeholder="Shkruani emrin dhe mbiemrin"
+                            type="email"
+                            value={companyEmail}
+                            onChange={(e) => setCompanyEmail(e.target.value)}
+                            placeholder="Email adresa"
+                            aria-label="Email adresa"
                             required
-                            className="block w-full px-4 py-3 bg-[#F6B817] text-black text-center placeholder:text-black border border-[#EF5B13]/30 rounded-md focus:outline-none focus:border-[#EF5B13] transition-all"
+                            className={`${fieldClass} lg:min-w-0 lg:flex-1`}
                         />
-
                         <input
-                            type="text"
-                            value={companyName}
-                            onChange={(e) => setCompanyName(e.target.value)}
-                            placeholder="Emri i kompanisë"
+                            type="tel"
+                            value={phoneNumber}
+                            onChange={(e) => setPhoneNumber(e.target.value)}
+                            placeholder="Nr. kontaktues"
+                            aria-label="Numri kontaktues"
                             required
-                            className="block w-full px-4 py-3 bg-[#F6B817] text-black text-center placeholder:text-black border border-[#EF5B13]/30 rounded-md focus:outline-none focus:border-[#EF5B13] transition-all"
+                            className={`${fieldClass} lg:min-w-0 lg:flex-1`}
                         />
-
-                        <div className="flex flex-col lg:flex-row gap-4">
-                            <input
-                                type="email"
-                                value={companyEmail}
-                                onChange={(e) => setCompanyEmail(e.target.value)}
-                                placeholder="Email adresa"
-                                required
-                                className="flex-1 px-4 py-3 bg-[#F6B817] text-black text-center placeholder:text-black border border-[#EF5B13]/30 rounded-md focus:outline-none focus:border-[#EF5B13] transition-all"
-                            />
-
-                            <input
-                                type="tel"
-                                value={phoneNumber}
-                                onChange={(e) => setPhoneNumber(e.target.value)}
-                                placeholder="Nr.kontaktues"
-                                required
-                                className="flex-1 px-4 py-3 bg-[#F6B817] text-black text-center placeholder:text-black border border-[#EF5B13]/30 rounded-md focus:outline-none focus:border-[#EF5B13] transition-all"
-                            />
-                        </div>
                     </div>
                 </div>
 
                 {/* SEKSIONI 2: DOKUMENTET PËR NGARKIM */}
-                <div className="space-y-4 mt-4">
-                    <h3 className="text-[#1d1d1b] font-malkie-slab text-[28px] leading-[2.5] uppercase text-center">DOKUMENTET PËR NGARKIM</h3>
-                    
-                    <div className="w-full max-w-[700px] mx-auto space-y-4">
-                        {/* File inputs in flex layout */}
-                        <div className="flex flex-col lg:flex-row gap-4">
-                            {/* Business Certificate */}
-                            <div className="flex-1 space-y-2">
-                                <label className="block">
-                                    <input
-                                        type="file"
-                                        onChange={handleBusinessCertificateChange}
-                                        required
-                                        accept=".pdf, .jpg, .jpeg, .png"
-                                        className="block w-full px-4 py-3 bg-[#F6B817] text-black border border-[#EF5B13]/30 rounded-md focus:outline-none focus:border-[#EF5B13] transition-all file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#D93627] file:text-[#F6B817] hover:file:bg-[#c43b32] file:cursor-pointer cursor-pointer"
-                                    />
-                                </label>
-                                <p className="text-[#c43b32] text-xs italic text-center lg:text-left">
-                                    Certifikata e biznesit e regjistruar në ARBK (PDF, JPG, PNG)
-                                </p>
-                                {businessCertificate && (
-                                    <div className="text-center lg:text-left text-[#367a3b] text-xs font-medium truncate">
-                                        ✓ {businessCertificate.name}
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* Personal Document */}
-                            <div className="flex-1 space-y-2">
-                                <label className="block">
-                                    <input
-                                        type="file"
-                                        onChange={handlePersonalDocumentChange}
-                                        required
-                                        accept=".pdf, .jpg, .jpeg, .png"
-                                        className="block w-full px-4 py-3 bg-[#F6B817] text-black border border-[#EF5B13]/30 rounded-md focus:outline-none focus:border-[#EF5B13] transition-all file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#D93627] file:text-[#F6B817] hover:file:bg-[#c43b32] file:cursor-pointer cursor-pointer"
-                                    />
-                                </label>
-                                <p className="text-[#c43b32] text-xs italic text-center lg:text-left">
-                                    Ngarkoni dokumentin personal të identifikimit
-                                </p>
-                                {personalDocument && (
-                                    <div className="text-center lg:text-left text-[#367a3b] text-xs font-medium truncate">
-                                        ✓ {personalDocument.name}
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-
-                        {compressingFile && (
-                            <div className="w-full flex justify-center py-2">
-                                <LoadingSpinner
-                                    label="Duke përgatitur dokumentin..."
-                                    size="sm"
-                                />
-                            </div>
-                        )}
-                    </div>
+                <h2 className="mb-4 mt-9 text-center font-malkie-slab text-[22px] uppercase leading-[1.2] text-[#141414] sm:mt-11 sm:text-[28px]">
+                    Dokumentet për ngarkim
+                </h2>
+                <div className="flex w-full max-w-[700px] flex-col gap-4 lg:flex-row">
+                    <FilePicker
+                        file={businessCertificate}
+                        onChange={handleBusinessCertificateChange}
+                        label="Certifikata e biznesit e regjistruar në ARBK"
+                        hint="Certifikata e biznesit e regjistruar në ARBK (PDF, JPG, PNG)"
+                    />
+                    <FilePicker
+                        file={personalDocument}
+                        onChange={handlePersonalDocumentChange}
+                        label="Dokumenti personal i identifikimit"
+                        hint="Dokumenti personal i identifikimit (PDF, JPG, PNG)"
+                    />
                 </div>
+                {compressingFile && (
+                    <div className="flex w-full justify-center py-2">
+                        <LoadingSpinner label="Duke përgatitur dokumentin..." size="sm" />
+                    </div>
+                )}
 
                 {/* SEKSIONI 3: ZGJIDHNI HAPËSIRËN */}
-                <div className="mt-[50px] flex w-full flex-col items-center">
-                    <h3 className="text-[#1d1d1b] font-malkie-slab text-[28px] leading-[2.5] uppercase text-center mb-4">ZGJIDHNI HAPËSIRËN</h3>
-                    
-                    <div
-                        className="relative left-1/2 flex -translate-x-1/2 flex-col items-center gap-8"
-                        style={contentWidthStyle}
-                    >
-                        {/* Option 1: Sheshi Skënderbeu */}
-                        <label 
-                            className={`group relative flex w-full flex-col items-center cursor-pointer transition-all duration-150 ${
-                                selectedSpace === 'Sheshi Skënderbeu'
-                                    ? 'opacity-100'
-                                    : 'opacity-100 hover:opacity-90'
-                            }`}
-                        >
-                            <div className="relative mb-3 aspect-[1672/941] w-full overflow-hidden rounded-md">
-                                <Image
-                                    src={image2}
-                                    alt="Sheshi Skënderbeu"
-                                    fill
-                                    className="object-cover"
-                                    style={{ borderRadius: '6px' }}
-                                    priority={false}
+                <h2 className="mb-4 mt-10 text-center font-malkie-slab text-[22px] uppercase leading-[1.2] text-[#141414] sm:mb-5 sm:mt-[52px] sm:text-[28px]">
+                    Zgjidhni hapësirën
+                </h2>
+                <div className="flex w-full flex-col gap-6 sm:gap-8">
+                    {EDITION_SPACES.map((space) => {
+                        const selected = selectedSpace === space.value;
+                        return (
+                            <label key={space.value} className="group flex cursor-pointer flex-col items-center gap-[14px]">
+                                <input
+                                    type="radio"
+                                    name="space"
+                                    value={space.value}
+                                    checked={selected}
+                                    onChange={(e) => setSelectedSpace(e.target.value)}
+                                    aria-label={space.subtitle ? `${space.title}, ${space.subtitle}` : space.title}
+                                    className="peer sr-only"
                                 />
-                            </div>
-                            
-                            <div className="mb-3 flex w-full items-center justify-center gap-4">
-                                <span className="text-[#1d1d1b] font-malkie-slab text-[28px] leading-[2.5] uppercase text-center">
-                                    Sheshi &quot;Skënderbeu&quot;
-                                </span>
-                                <div className="flex shrink-0 items-center justify-center">
-                                    <div className={`w-5 h-5 lg:w-6 lg:h-6 border-2 flex items-center justify-center transition-all ${
-                                        selectedSpace === 'Sheshi Skënderbeu'
-                                            ? 'border-[#F6B817] bg-[#F6B817]'
-                                            : 'border-[#F6B817] group-hover:border-[#D93627] bg-transparent'
-                                    }`}>
-                                        {selectedSpace === 'Sheshi Skënderbeu' && (
-                                            <svg className="w-3.5 h-3.5 lg:w-4 lg:h-4 text-[#1d1d1b]" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                            </svg>
-                                        )}
-                                    </div>
-                                    <input
-                                        type="radio"
-                                        name="space"
-                                        value="Sheshi Skënderbeu"
-                                        checked={selectedSpace === 'Sheshi Skënderbeu'}
-                                        onChange={(e) => setSelectedSpace(e.target.value)}
-                                        className="absolute opacity-0 w-0 h-0" 
+                                <div
+                                    className={`relative aspect-video w-full overflow-hidden rounded-md outline-offset-[3px] peer-focus-visible:outline peer-focus-visible:outline-4 peer-focus-visible:outline-[#141414] sm:outline-offset-4 ${
+                                        selected ? 'outline outline-4 outline-[#D93627] sm:outline-[5px]' : ''
+                                    }`}
+                                >
+                                    <Image
+                                        src={space.image}
+                                        alt=""
+                                        fill
+                                        sizes="(max-width: 860px) 100vw, 800px"
+                                        className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
                                     />
                                 </div>
-                            </div>
-                        </label>
-
-                        {/* Option 2: Sheshi Zahir Pajaziti */}
-                        <label 
-                            className={`group relative flex w-full flex-col items-center cursor-pointer transition-all duration-150 ${
-                                selectedSpace === 'Sheshi Zahir Pajaziti'
-                                    ? 'opacity-100'
-                                    : 'opacity-100 hover:opacity-90'
-                            }`}
-                        >
-                            <div className="relative mb-3 aspect-[1672/941] w-full overflow-hidden rounded-md">
-                                <Image
-                                    src={image1}
-                                    alt="Sheshi Zahir Pajaziti"
-                                    fill
-                                    className="object-cover"
-                                    style={{ borderRadius: '6px' }}
-                                    priority={false}
-                                />
-                            </div>
-                            
-                            <div className="mb-3 flex w-full items-center justify-center gap-4">
-                                <span className="text-[#1d1d1b] font-malkie-slab text-[28px] leading-[2.5] uppercase text-center">
-                                    Sheshi &quot;Zahir Pajaziti&quot;
-                                </span>
-                                <div className="flex shrink-0 items-center justify-center">
-                                    <div className={`w-5 h-5 lg:w-6 lg:h-6 border-2 flex items-center justify-center transition-all ${
-                                        selectedSpace === 'Sheshi Zahir Pajaziti'
-                                            ? 'border-[#F6B817] bg-[#F6B817]'
-                                            : 'border-[#F6B817] group-hover:border-[#D93627] bg-transparent'
-                                    }`}>
-                                        {selectedSpace === 'Sheshi Zahir Pajaziti' && (
-                                            <svg className="w-3.5 h-3.5 lg:w-4 lg:h-4 text-[#1d1d1b]" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                <span className="flex items-center gap-[10px] bg-transparent sm:gap-4">
+                                    <span className="flex flex-col items-center bg-transparent">
+                                        <span className="bg-transparent text-center font-malkie-slab text-[19px] uppercase leading-[1.3] text-[#141414] sm:text-[28px]">
+                                            {space.title}
+                                        </span>
+                                        {space.subtitle ? (
+                                            <span className="bg-transparent text-center text-[13px] text-[#4a4a4a] sm:text-[15px]">
+                                                {space.subtitle}
+                                            </span>
+                                        ) : null}
+                                    </span>
+                                    <span
+                                        aria-hidden="true"
+                                        className={`flex h-[22px] w-[22px] shrink-0 items-center justify-center border-2 border-[#D93627] sm:h-[26px] sm:w-[26px] ${
+                                            selected ? 'bg-[#D93627]' : 'bg-transparent'
+                                        }`}
+                                    >
+                                        {selected ? (
+                                            <svg className="h-[14px] w-[14px] bg-transparent sm:h-4 sm:w-4" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth={3.5} strokeLinecap="round" strokeLinejoin="round">
+                                                <path d="M5 12l5 5 9-10" />
                                             </svg>
-                                        )}
-                                    </div>
-                                    <input
-                                        type="radio"
-                                        name="space"
-                                        value="Sheshi Zahir Pajaziti"
-                                        checked={selectedSpace === 'Sheshi Zahir Pajaziti'}
-                                        onChange={(e) => setSelectedSpace(e.target.value)}
-                                        className="absolute opacity-0 w-0 h-0" 
-                                    />
-                                </div>
-                            </div>
-                        </label>
-                    </div>
+                                        ) : null}
+                                    </span>
+                                </span>
+                            </label>
+                        );
+                    })}
                 </div>
 
-                <div className="w-full max-w-[700px] mx-auto mt-4">
+                <div className="mt-9 w-full max-w-[700px] sm:mt-10">
                     {loading || compressingFile ? (
-                        <div className="w-full py-4 flex items-center justify-center">
+                        <div className="flex w-full items-center justify-center py-4">
                             <LoadingSpinner
                                 label={compressingFile ? 'Duke përgatitur dokumentin...' : 'Duke dërguar aplikimin...'}
                                 size="md"
@@ -531,19 +431,21 @@ export default function ContactForm({
                     ) : (
                         <button
                             type="submit"
-                            className="flex w-full items-center justify-center bg-[#848F38] py-4 font-malkie-slab text-[34px] uppercase leading-[1.1] text-white rounded-md transition-colors hover:bg-[#c43b32]"
+                            className="flex w-full items-center justify-center bg-[#D93627] py-[14px] font-malkie-slab text-[24px] uppercase leading-[1.2] text-white transition-colors hover:bg-[#141414] sm:py-4 sm:text-[30px]"
                         >
                             Dërgo
                         </button>
                     )}
                 </div>
-                <p className="text-center text-[#031603] text-[12px] font-malkieslab mt-4">© 2025 Prishtina Festive</p>
             </form>
             </div>
             ) : null}
 
-            <div className="w-full pb-8 mt-[50px]">
-                <DecorativeBanner src={bannerBottom} alt="Akull n'Verë decorative banner" fullWidth />
+            <div className="flex w-full flex-col items-center px-3 pb-7 pt-7 sm:px-8 sm:pb-12">
+                <p className="font-malkie-slab text-[13px] text-[#141414]">© {EDITION.year} Prishtina Festive</p>
+                <div className="mt-4 flex w-full justify-center sm:mt-5">
+                    <WinterFooterBanner />
+                </div>
             </div>
 
             {showModal && (
@@ -567,7 +469,7 @@ export default function ContactForm({
                             
                             {/* Thank You Message */}
                             <h2 className="text-center font-bold text-2xl text-[#1d1d1b] mb-4 leading-tight">
-                                Faleminderit <span className="font-bold text-[#367a3b]">{submittedFullName}</span> që aplikuat për shtëpizë në <span className="font-bold">Akull n&rsquo;Verë</span>.
+                                Faleminderit <span className="font-bold text-[#367a3b]">{submittedFullName}</span> që aplikuat për shtëpizë në <span className="font-bold">{EDITION.name}</span>.
                             </h2>
                             
                             {/* Professional Message */}

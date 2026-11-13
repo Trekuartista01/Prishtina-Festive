@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from 'react';
 import Image from 'next/image';
+import { EDITION } from '@/lib/edition';
 
 interface ListaLoginProps {
   onSuccess: () => void;
@@ -59,8 +60,8 @@ export default function ListaLogin({ onSuccess }: ListaLoginProps) {
       <div className="w-full max-w-md border border-[#031603] rounded-xl p-8">
         <div className="flex flex-col items-center mb-8">
           <Image
-            src="/assets/summer/logo-akull-nver.png"
-            alt="Akull n'Verë"
+            src={EDITION.logo}
+            alt={EDITION.name}
             width={184}
             height={184}
             className="w-[184px] h-[184px] object-contain mb-4"
